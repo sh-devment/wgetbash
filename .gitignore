@@ -7,12 +7,9 @@ secret.md
 # ------ mask
 *.db
 *.DS_Store
-*.service
 
 # ------ dir
 data/
 build/tmp/
 
-# ------ ex
-!*.service.example
 

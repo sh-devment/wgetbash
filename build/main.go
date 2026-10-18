@@ -1,8 +1,10 @@
 package main
 
 import (
+	"bytes"
 	"embed"
 	"fmt"
+	"html/template"
 	"io/fs"
 	"log"
 	"net/http"
@@ -20,7 +22,9 @@ func main() {
 		return
 	}
 
+	initRegion()
 	initDB()
+	index := renderIndex()
 
 	mux := http.NewServeMux()
 
@@ -52,6 +56,11 @@ func main() {
 			handleCallback(w, r)
 			return
 		}
+		if r.URL.Path == "/" {
+			w.Header().Set("Content-Type", "text/html; charset=utf-8")
+			w.Write(index)
+			return
+		}
 		fileServer.ServeHTTP(w, r)
 	})
 
@@ -62,4 +71,21 @@ func main() {
 
 	log.Printf("wgetbash listening on :%s", port)
 	log.Fatal(http.ListenAndServe(":"+port, mux))
+}
+
+// renderIndex fills static/index.html with the region's login page texts.
+// The texts are fixed for the life of the process, so it runs once at startup
+// and a broken template stops the process instead of serving a blank page.
+// /index.html itself is redirected to / by the file server, so this is the
+// only way the page is served.
+func renderIndex() []byte {
+	tpl, err := template.ParseFS(staticFiles, "static/index.html")
+	if err != nil {
+		log.Fatalf("parse index.html: %v", err)
+	}
+	var buf bytes.Buffer
+	if err := tpl.Execute(&buf, texts); err != nil {
+		log.Fatalf("render index.html: %v", err)
+	}
+	return buf.Bytes()
 }

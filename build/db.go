@@ -47,100 +47,20 @@ func seedDemoContent(userID int64) {
 		return
 	}
 
-	res, err := db.Exec(`INSERT INTO groups (user_id, name) VALUES (?, 'get started')`, userID)
+	res, err := db.Exec(`INSERT INTO groups (user_id, name) VALUES (?, ?)`, userID, texts.DemoGroup)
 	if err != nil {
 		return
 	}
 	gid, _ := res.LastInsertId()
 
-	// Демо-контент для нового пользователя. Комментарии на русском — как и README.
-	scripts := []struct {
-		name    string
-		content string
-		private bool
-	}{
-		{
-			"hello world",
-			`# привет! это пример скрипта
-# писать #!/bin/bash не нужно — он подставляется автоматически
-# пиши команды, сохрани, потом нажми [wget] — ссылка скопируется в буфер
-# вставь её на любом сервере, и скрипт выполнится удалённо
-
-# скрипт выполняется в памяти через пайп — на сервере ничего не сохраняется
-# файлы не создаются, после запуска чистить нечего
-
-# текущая дата и время
-date
-
-# имя системы и версия ядра
-uname -a
-
-# текущий пользователь
-whoami
-
-# память: всего / занято / свободно
-free -h
-
-# место на корневом разделе
-df -h /
-
-# сколько система работает без перезагрузки
-uptime`,
-			false,
-		},
-		{
-			"error handling",
-			`# этот скрипт показывает, что происходит при ошибке
-# wgetbash оборачивает каждый скрипт обработкой ошибок
-# если любая команда завершится с ненулевым кодом:
-#   - выполнение сразу останавливается
-#   - показывается номер упавшей строки
-#   - выводится красный [ERROR] с кодом выхода
-
-# это выполнится успешно
-echo "шаг 1: ок"
-
-# а это упадёт — код выхода 1
-# всё, что ниже этой строки, уже НЕ выполнится
-false
-
-# сюда мы никогда не дойдём
-echo "шаг 2: ты этого не увидишь"`,
-			false,
-		},
-		{
-			"markdown and private notes",
-			`# это заметка, а не команда для сервера
-# она уже приватная — смотри на замок слева от названия
-
-# ── приватность ──
-# кнопка [make: private] внизу переключает видимость
-# публичный скрипт может запустить любой, у кого есть ссылка
-# приватный отдаётся только тебе и только в браузере, где ты залогинен
-# через wget приватный скрипт не выполнится — придёт 401 вместо кода
-# удобно, когда это заметка, а не команда для сервера
-
-# ── markdown ──
-# три дефиса на отдельной строке рисуют горизонтальную линию:
-
----
-
-# а ссылка вида [текст](https://example.com) становится кликабельной:
-# исходники — [wgetbash на github](https://github.com/shumilovsergey/wgetbash)
-
-# ── важно ──
-# markdown работает только здесь, в режиме просмотра
-# при редактировании и в выводе wget текст остаётся сырым, символ в символ
-# то есть рендер никак не влияет на то, что реально выполнится на сервере`,
-			true,
-		},
-	}
-
+	// Demo content for a new user, in the language of the region
+	// (region-ru.go / region-com.go).
+	//
 	// The list is ordered by updated_at DESC, so identical timestamps would show
-	// these bottom-up. Stagger them a second apart — first in the table above is
+	// these bottom-up. Stagger them a second apart — first in DemoScripts is
 	// newest — so they read top-down in teaching order.
 	now := time.Now().Unix()
-	for i, s := range scripts {
+	for i, s := range texts.DemoScripts {
 		db.Exec(
 			`INSERT INTO scripts (group_id, name, content, hash, private, updated_at) VALUES (?, ?, ?, ?, ?, ?)`,
 			gid, s.name, s.content, newHash(), s.private, now-int64(i),

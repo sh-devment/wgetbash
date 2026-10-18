@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="{{.Lang}}">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -14,12 +14,12 @@
   <div class="login-center">
     <div class="login-card">
       <div class="login-logo">WGETBASH</div>
-      <div class="login-sub"><a href="https://sh-development.ru" target="_blank">sh-development.ru</a></div>
-      <button class="login-btn" id="doLogin">login</button>
+      <div class="login-sub"><a href="https://sh-development.{{.Zone}}" target="_blank">sh-development.{{.Zone}}</a></div>
+      <button class="login-btn" id="doLogin">{{.LoginButton}}</button>
     </div>
     <div class="login-panel open" id="loginPanel">
       <div class="login-panel-inner">
-        <div class="login-hello">store your bash scripts in the cloud and run them on any server with a single <code>wget</code> command — no files, no setup, just copy and go</div>
+        <div class="login-hello">{{.LoginHello}}</div>
         <div class="login-panel-foot">
           <span class="login-foot-dot"></span>
         </div>
@@ -49,7 +49,7 @@
         </div>
         <div class="pi-list">
           <a class="pi-action" href="/auth/delegate">apps</a>
-          <a class="pi-action" href="https://github.com/shumilovsergey/wgetbash/blob/main/README.md" target="_blank" rel="noopener">readme</a>
+          <a class="pi-action" href="https://github.com/sh-devment/wgetbash/blob/main/README.md" target="_blank" rel="noopener">readme</a>
           <button class="pi-action pi-logout" id="logoutRow">log out</button>
         </div>
       </div>

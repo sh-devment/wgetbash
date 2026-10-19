@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="tools/wgetbash.svg" width="1000" alt="wgetbash">
+  <img src="tools/wgetbash-baner.svg" width="1000" alt="wgetbash">
 </p>
 
 ---

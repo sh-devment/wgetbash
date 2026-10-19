@@ -47,7 +47,7 @@ func seedDemoContent(userID int64) {
 		return
 	}
 
-	res, err := db.Exec(`INSERT INTO groups (user_id, name) VALUES (?, ?)`, userID, texts.DemoGroup)
+	res, err := db.Exec(`INSERT INTO groups (user_id, name) VALUES (?, ?)`, userID, region.DemoGroup)
 	if err != nil {
 		return
 	}
@@ -60,7 +60,7 @@ func seedDemoContent(userID int64) {
 	// these bottom-up. Stagger them a second apart — first in DemoScripts is
 	// newest — so they read top-down in teaching order.
 	now := time.Now().Unix()
-	for i, s := range texts.DemoScripts {
+	for i, s := range region.DemoScripts {
 		db.Exec(
 			`INSERT INTO scripts (group_id, name, content, hash, private, updated_at) VALUES (?, ?, ?, ?, ?, ?)`,
 			gid, s.name, s.content, newHash(), s.private, now-int64(i),

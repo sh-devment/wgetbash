@@ -6,6 +6,7 @@
   <title>wgetbash</title>
   <link rel="icon" type="image/svg+xml" href="favicon.svg">
   <link rel="stylesheet" href="style.css">
+  <script>window.TEXT = {{.Text.JS}};</script>
 </head>
 <body>
 
@@ -14,12 +15,12 @@
   <div class="login-center">
     <div class="login-card">
       <div class="login-logo">WGETBASH</div>
-      <div class="login-sub"><a href="https://sh-development.{{.Zone}}" target="_blank">sh-development.{{.Zone}}</a></div>
-      <button class="login-btn" id="doLogin">{{.LoginButton}}</button>
+      <div class="login-sub"><a href="https://{{.Domain}}" target="_blank">{{.Domain}}</a></div>
+      <button class="login-btn" id="doLogin">{{.Text.Login}}</button>
     </div>
     <div class="login-panel open" id="loginPanel">
       <div class="login-panel-inner">
-        <div class="login-hello">{{.LoginHello}}</div>
+        <div class="login-hello">{{.Text.About}}</div>
         <div class="login-panel-foot">
           <span class="login-foot-dot"></span>
         </div>
@@ -34,11 +35,11 @@
   <!-- Header -->
   <nav class="navbar">
     <div class="nav-tabs">
-      <button class="tab active" data-tab="wgetbash">wgetbash</button>
-      <button class="tab" data-tab="loger">loger</button>
+      <button class="tab active" data-tab="wgetbash">{{.Text.TabScripts}}</button>
+      <button class="tab" data-tab="loger">{{.Text.TabLoger}}</button>
     </div>
     <div class="profile-area">
-      <button class="profile-btn" id="userTrig" title="menu">
+      <button class="profile-btn" id="userTrig" title="{{.Text.Menu}}">
         <span id="userInitial">U</span>
       </button>
       <div class="profile-popover" id="userDrop">
@@ -48,9 +49,9 @@
           <span class="pi-sub" id="userUid"></span>
         </div>
         <div class="pi-list">
-          <a class="pi-action" href="/auth/delegate">apps</a>
-          <a class="pi-action" href="https://github.com/sh-devment/wgetbash/blob/main/README.md" target="_blank" rel="noopener">readme</a>
-          <button class="pi-action pi-logout" id="logoutRow">log out</button>
+          <a class="pi-action" href="/auth/delegate">{{.Text.Apps}}</a>
+          <a class="pi-action" href="https://github.com/sh-devment/wgetbash/blob/main/README.md" target="_blank" rel="noopener">{{.Text.Readme}}</a>
+          <button class="pi-action pi-logout" id="logoutRow">{{.Text.Logout}}</button>
         </div>
       </div>
     </div>
@@ -64,7 +65,7 @@
       <!-- Sidebar -->
       <div class="sb" id="sb">
         <div class="sb-hd">
-          <input class="sb-search" id="sbSearch" placeholder="search" autocomplete="off"/>
+          <input class="sb-search" id="sbSearch" placeholder="{{.Text.Search}}" autocomplete="off"/>
         </div>
         <div class="grp-list" id="grpList"></div>
       </div>
@@ -72,14 +73,14 @@
       <!-- Right panel -->
       <div class="rp">
         <div class="rp-hd">
-          <button class="ib sm" id="backBtn" style="display:none" title="back">
+          <button class="ib sm" id="backBtn" style="display:none" title="{{.Text.Back}}">
             <svg width="8" height="12" viewBox="0 0 8 12" fill="none">
               <path d="M6 2L2 6L6 10" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
             </svg>
           </button>
           <span class="rp-title" id="rpTitle">—</span>
           <div class="dd" id="grpMenuWrap" style="visibility:hidden">
-            <button class="ib sm" id="grpTrig" title="group menu">
+            <button class="ib sm" id="grpTrig" title="{{.Text.GroupMenu}}">
               <svg width="14" height="10" viewBox="0 0 14 10" fill="none">
                 <path d="M1 1.5H13M1 5H13M1 8.5H13" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
               </svg>
@@ -87,15 +88,15 @@
             <div class="drop" id="grpDrop" style="display:none">
               <div class="drop-row" id="grpNameRow">
                 <span class="drop-lbl" id="grpNameDisplay"></span>
-                <button class="ib sm amber" id="grpRenameBtn" title="edit name">
+                <button class="ib sm amber" id="grpRenameBtn" title="{{.Text.EditName}}">
                   <svg width="10" height="10" viewBox="0 0 10 10" fill="none">
                     <path d="M7.5 1.5L9 3L3.5 9H1.5V7L7.5 1.5Z" stroke="currentColor" stroke-width="1.2" stroke-linejoin="round"/>
                   </svg>
                 </button>
               </div>
               <div class="drop-row" id="delGrpRow">
-                <span class="drop-lbl">delete group</span>
-                <button class="ib sm danger" title="delete">
+                <span class="drop-lbl">{{.Text.DeleteGroup}}</span>
+                <button class="ib sm danger" title="{{.Text.Delete}}">
                   <svg width="10" height="10" viewBox="0 0 10 10" fill="none">
                     <path d="M1.5 1.5L8.5 8.5M8.5 1.5L1.5 8.5" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/>
                   </svg>
@@ -116,11 +117,11 @@
 
     <!-- action bar (visible once logs are loaded) -->
     <div class="lgr-acts" id="lgrActs" style="display:none">
-      <button class="lgr-btn" id="lgrLoadNewBtn">load new</button>
-      <button class="lgr-btn danger" id="lgrClearBtn">clear</button>
-      <button class="lgr-btn" id="lgrSelectBtn">select</button>
-      <button class="lgr-btn" id="lgrNewWindowBtn">new window</button>
-      <span class="lgr-count" id="lgrCount">0 / 0 lines</span>
+      <button class="lgr-btn" id="lgrLoadNewBtn">{{.Text.LoadNew}}</button>
+      <button class="lgr-btn danger" id="lgrClearBtn">{{.Text.Clear}}</button>
+      <button class="lgr-btn" id="lgrSelectBtn">{{.Text.Select}}</button>
+      <button class="lgr-btn" id="lgrNewWindowBtn">{{.Text.NewWindow}}</button>
+      <span class="lgr-count" id="lgrCount">{{.Text.LinesZero}}</span>
     </div>
 
     <!-- load screen -->
@@ -133,7 +134,7 @@
           <line x1="9" y1="15" x2="12" y2="12"/>
           <line x1="15" y1="15" x2="12" y2="12"/>
         </svg>
-        <p><strong>Drop a log file here</strong><br>or click to browse</p>
+        <p><strong>{{.Text.DropTitle}}</strong><br>{{.Text.DropHint}}</p>
         <div class="lgr-fmts">
           <span class="lgr-fmt">.log</span><span class="lgr-fmt">.txt</span>
           <span class="lgr-fmt">.out</span><span class="lgr-fmt">.err</span>
@@ -143,10 +144,10 @@
         <div class="lgr-drop-err" id="lgrDropErr"></div>
       </div>
       <div class="lgr-paste-wrap">
-        <label>or paste log text</label>
-        <textarea id="lgrPaste" placeholder="Paste log lines here…"></textarea>
+        <label>{{.Text.PasteLabel}}</label>
+        <textarea id="lgrPaste" placeholder="{{.Text.PastePlaceholder}}"></textarea>
         <div style="display:flex;justify-content:flex-end;margin-top:8px">
-          <button class="lgr-btn primary" id="lgrPasteLoad">load</button>
+          <button class="lgr-btn primary" id="lgrPasteLoad">{{.Text.Load}}</button>
         </div>
       </div>
       <input type="file" id="lgrFile" accept=".log,.txt,.out,.err,.json,.jsonl,.ndjson,.csv" style="display:none">
@@ -159,22 +160,22 @@
       <div class="lgr-bar">
         <div class="lgr-col">
           <div class="lgr-col-hd">
-            <span class="lgr-lbl focus">Focus</span>
-            <span class="lgr-hint">center line context</span>
+            <span class="lgr-lbl focus">{{.Text.Focus}}</span>
+            <span class="lgr-hint">{{.Text.FocusHint}}</span>
           </div>
           <div class="lgr-focus-row">
-            <div class="lgr-field"><label>center</label><input type="number" id="lgrFocusCenter" value="0" min="0"></div>
+            <div class="lgr-field"><label>{{.Text.Center}}</label><input type="number" id="lgrFocusCenter" value="0" min="0"></div>
             <span class="lgr-sep">±</span>
-            <div class="lgr-field"><label>before</label><input type="number" id="lgrFocusBefore" value="0" min="0"></div>
-            <div class="lgr-field"><label>after</label><input type="number" id="lgrFocusAfter" value="0" min="0"></div>
+            <div class="lgr-field"><label>{{.Text.Before}}</label><input type="number" id="lgrFocusBefore" value="0" min="0"></div>
+            <div class="lgr-field"><label>{{.Text.After}}</label><input type="number" id="lgrFocusAfter" value="0" min="0"></div>
             <div class="lgr-focus-acts">
               <button class="lgr-pill-btn active" id="lgrFocusToggle">
                 <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
-                on
+                {{.Text.JS.On}}
               </button>
               <button class="lgr-pill-btn del" id="lgrFocusReset">
                 <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
-                reset
+                {{.Text.Reset}}
               </button>
             </div>
           </div>
@@ -182,11 +183,11 @@
         <div class="lgr-sep-v"></div>
         <div class="lgr-col">
           <div class="lgr-col-hd">
-            <span class="lgr-lbl remove">Remove</span>
-            <span class="lgr-hint">hide matching</span>
+            <span class="lgr-lbl remove">{{.Text.Remove}}</span>
+            <span class="lgr-hint">{{.Text.RemoveHint}}</span>
           </div>
           <div class="lgr-cond-list" id="lgrRemoveList"></div>
-          <button class="lgr-add-btn remove" id="lgrAddRemove">+ add</button>
+          <button class="lgr-add-btn remove" id="lgrAddRemove">{{.Text.Add}}</button>
         </div>
       </div>
 
@@ -194,20 +195,20 @@
       <div class="lgr-bar">
         <div class="lgr-col">
           <div class="lgr-col-hd">
-            <span class="lgr-lbl grep">Grep</span>
-            <span class="lgr-hint">show only matching</span>
+            <span class="lgr-lbl grep">{{.Text.Grep}}</span>
+            <span class="lgr-hint">{{.Text.GrepHint}}</span>
           </div>
           <div class="lgr-cond-list" id="lgrGrepList"></div>
-          <button class="lgr-add-btn grep" id="lgrAddGrep">+ add</button>
+          <button class="lgr-add-btn grep" id="lgrAddGrep">{{.Text.Add}}</button>
         </div>
         <div class="lgr-sep-v"></div>
         <div class="lgr-col">
           <div class="lgr-col-hd">
-            <span class="lgr-lbl math">Math</span>
-            <span class="lgr-hint">filter by number value</span>
+            <span class="lgr-lbl math">{{.Text.Math}}</span>
+            <span class="lgr-hint">{{.Text.MathHint}}</span>
           </div>
           <div class="lgr-cond-list" id="lgrMathList"></div>
-          <button class="lgr-add-btn math" id="lgrAddMath">+ add</button>
+          <button class="lgr-add-btn math" id="lgrAddMath">{{.Text.Add}}</button>
         </div>
       </div>
 
@@ -222,7 +223,7 @@
 <!-- Confirm modal -->
 <div class="overlay" id="confirmOverlay" style="display:none">
   <div class="modal">
-    <div class="modal-q">are u shure?</div>
+    <div class="modal-q">{{.Text.Confirm}}</div>
     <div class="modal-btns">
       <button class="ib teal" id="confirmYes">
         <svg width="14" height="12" viewBox="0 0 14 12" fill="none">

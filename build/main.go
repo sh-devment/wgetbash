@@ -73,7 +73,7 @@ func main() {
 	log.Fatal(http.ListenAndServe(":"+port, mux))
 }
 
-// renderIndex fills static/index.html with the region's login page texts.
+// renderIndex fills static/index.html with the region's texts.
 // The texts are fixed for the life of the process, so it runs once at startup
 // and a broken template stops the process instead of serving a blank page.
 // /index.html itself is redirected to / by the file server, so this is the
@@ -84,7 +84,7 @@ func renderIndex() []byte {
 		log.Fatalf("parse index.html: %v", err)
 	}
 	var buf bytes.Buffer
-	if err := tpl.Execute(&buf, texts); err != nil {
+	if err := tpl.Execute(&buf, region); err != nil {
 		log.Fatalf("render index.html: %v", err)
 	}
 	return buf.Bytes()

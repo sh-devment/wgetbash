@@ -206,9 +206,9 @@ func handleLogout(w http.ResponseWriter, r *http.Request) {
 
 // menuURL is app B — the app we delegate the logged-in user to. Every app
 // lives on the same subdomain in both zones and SSO works only within one
-// zone, so the menu's domain follows the region's zone (see region.go).
+// zone, so the menu's domain follows the region's (see region.go).
 func menuURL() string {
-	return "https://menu.sh-development." + texts.Zone + "/"
+	return "https://menu." + region.Domain + "/"
 }
 
 // handleDelegate forwards the current user to the menu app via auth-center.

@@ -1,11 +1,101 @@
 package main
 
-var regionRU = regionTexts{
-	Lang: "ru",
-	Zone: "ru",
+var regionRU = regionDef{
+	Domain: "sh-development.ru",
+	Lang:   "ru",
 
-	LoginButton: "войти",
-	LoginHello:  `храни bash-скрипты в облаке и запускай их на любом сервере одной командой <code>wget</code> — без файлов и настройки, просто скопируй и вставь`,
+	Text: pageText{
+		Login: "войти",
+		About: `храни bash-скрипты в облаке и запускай их на любом сервере одной командой <code>wget</code> — без файлов и настройки, просто скопируй и вставь`,
+
+		TabScripts: "wgetbash",
+		TabLoger:   "loger",
+		Menu:       "меню",
+		Apps:       "apps",
+		Readme:     "readme",
+		Logout:     "выйти",
+
+		Search:      "поиск",
+		Back:        "назад",
+		GroupMenu:   "меню главы",
+		EditName:    "переименовать",
+		DeleteGroup: "удалить главу",
+		Delete:      "удалить",
+		Confirm:     "точно?",
+
+		LoadNew:          "загрузить новый",
+		Clear:            "очистить",
+		Select:           "выделить",
+		NewWindow:        "новое окно",
+		LinesZero:        "0 / 0 строк",
+		DropTitle:        "Перетащите сюда лог-файл",
+		DropHint:         "или нажмите, чтобы выбрать",
+		PasteLabel:       "или вставьте текст лога",
+		PastePlaceholder: "Вставьте строки лога сюда…",
+		Load:             "загрузить",
+		Focus:            "Фокус",
+		FocusHint:        "строки вокруг центральной",
+		Center:           "центр",
+		Before:           "до",
+		After:            "после",
+		Reset:            "сброс",
+		Remove:           "Убрать",
+		RemoveHint:       "скрыть совпадения",
+		Grep:             "Grep",
+		GrepHint:         "показать только совпадения",
+		Math:             "Числа",
+		MathHint:         "фильтр по значению числа",
+		Add:              "+ добавить",
+
+		JS: jsText{
+			LoadGroupsFailed:    "не удалось загрузить главы",
+			LoadScriptsFailed:   "не удалось загрузить скрипты",
+			AddChapter:          "добавить главу",
+			Expand:              "развернуть",
+			Collapse:            "свернуть",
+			Unnamed:             "(без названия)",
+			PrivateLock:         "приватный — открыть можешь только ты",
+			CopyScript:          "копировать скрипт",
+			Save:                "сохранить",
+			Edit:                "редактировать",
+			CopyWget:            "копировать команду wget",
+			Make:                "сделать:",
+			Public:              "публичным",
+			Private:             "приватным",
+			NowPrivateHint:      "сейчас приватный — станет доступен любому, у кого есть ссылка",
+			NowPublicHint:       "сейчас публичный — открыть сможешь только ты",
+			DeleteScript:        "удалить скрипт",
+			AddScript:           "добавить скрипт",
+			SaveFailed:          "не удалось сохранить скрипт",
+			DeleteFailed:        "не удалось удалить скрипт",
+			MadePrivate:         "приватный — открывается, только пока ты залогинен",
+			MadePublic:          "публичный — запустить может любой, у кого есть ссылка",
+			VisibilityFailed:    "не удалось изменить видимость",
+			ScriptCopied:        "скрипт скопирован!",
+			WgetCopied:          "команда wget скопирована!",
+			WgetCopiedPrivate:   "wget скопирован — скрипт приватный, удалённо он не запустится",
+			ChapterName:         "название главы",
+			CreateChapterFailed: "не удалось создать главу",
+			CreateScriptFailed:  "не удалось создать скрипт",
+			NewName:             "новое название",
+			EditName:            "переименовать",
+			RenameFailed:        "не удалось переименовать главу",
+			DeleteChapterFailed: "не удалось удалить главу",
+
+			On:                "вкл",
+			Off:               "выкл",
+			NoMatch:           "Нет строк, подходящих под условия.",
+			Lines:             "%d / %d строк",
+			GrepPlaceholder:   "*текст* или ERROR",
+			RemovePlaceholder: "*200* или ERROR",
+			Enable:            "включить",
+			Disable:           "выключить",
+			Delete:            "удалить",
+			PrefixHint:        "необязательный префикс перед числом",
+			Unsupported:       "Не поддерживается: %s",
+			NoExt:             "(без расширения)",
+		},
+	},
 
 	DemoGroup: "get started",
 	DemoScripts: []demoScript{
@@ -64,7 +154,7 @@ echo "шаг 2: ты этого не увидишь"`,
 # она уже приватная — смотри на замок слева от названия
 
 # ── приватность ──
-# кнопка [make: private] внизу переключает видимость
+# кнопка [сделать: приватным] внизу переключает видимость
 # публичный скрипт может запустить любой, у кого есть ссылка
 # приватный отдаётся только тебе и только в браузере, где ты залогинен
 # через wget приватный скрипт не выполнится — придёт 401 вместо кода

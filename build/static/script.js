@@ -84,7 +84,7 @@ async function loadGroups() {
     }
     render();
   } catch {
-    toast('failed to load groups');
+    toast(TEXT.loadGroupsFailed);
   }
 }
 
@@ -97,7 +97,7 @@ async function loadScripts(gid) {
     g.loaded  = true;
     sortScripts(g);
   } catch {
-    toast('failed to load scripts');
+    toast(TEXT.loadScriptsFailed);
   }
 }
 
@@ -130,7 +130,7 @@ function renderGroups() {
 
   const addRow = document.createElement('div');
   addRow.className = 'sb-add';
-  addRow.title     = 'add chapter';
+  addRow.title     = TEXT.addChapter;
   addRow.innerHTML = `<svg width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M6 1V11M1 6H11" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>`;
   addRow.addEventListener('click', addGroup);
   list.appendChild(addRow);
@@ -156,7 +156,7 @@ function renderScripts() {
 
       const expBtn = document.createElement('button');
       expBtn.className = 'ib sm';
-      expBtn.title     = s.exp ? 'collapse' : 'expand';
+      expBtn.title     = s.exp ? TEXT.collapse : TEXT.expand;
       expBtn.innerHTML = s.exp ? ICO.chevU : ICO.chevD;
       expBtn.addEventListener('click', () => toggleScript(s.id));
 
@@ -171,31 +171,31 @@ function renderScripts() {
       } else {
         nameEl = document.createElement('span');
         nameEl.className   = 'sc-name';
-        nameEl.textContent = s.name || '(unnamed)';
+        nameEl.textContent = s.name || TEXT.unnamed;
       }
 
       let lockEl = null;
       if (s.private && !s.edit) {
         lockEl = document.createElement('span');
         lockEl.className = 'sc-lock';
-        lockEl.title     = 'private — only you can open it';
+        lockEl.title     = TEXT.privateLock;
         lockEl.innerHTML = ICO.lock;
       }
 
       const actBtn = document.createElement('button');
       if (!s.exp) {
         actBtn.className = 'ib sm';
-        actBtn.title     = 'copy script';
+        actBtn.title     = TEXT.copyScript;
         actBtn.innerHTML = ICO.clip;
         actBtn.addEventListener('click', e => { e.stopPropagation(); copyContent(s); });
       } else if (s.edit) {
         actBtn.className = 'ib sm amber';
-        actBtn.title     = 'save';
+        actBtn.title     = TEXT.save;
         actBtn.innerHTML = ICO.check;
         actBtn.addEventListener('click', () => saveScript(s.id));
       } else {
         actBtn.className = 'ib sm amber';
-        actBtn.title     = 'edit';
+        actBtn.title     = TEXT.edit;
         actBtn.innerHTML = ICO.pencil;
         actBtn.addEventListener('click', () => startEdit(s.id));
       }
@@ -203,7 +203,7 @@ function renderScripts() {
       const wb = document.createElement('button');
       wb.className   = 'wget-btn';
       wb.textContent = 'wget';
-      wb.title       = 'copy wget command';
+      wb.title       = TEXT.copyWget;
       wb.addEventListener('click', e => { e.stopPropagation(); copyWget(s); });
 
       row.appendChild(expBtn);
@@ -268,14 +268,14 @@ function renderScripts() {
 
         const privLbl = document.createElement('span');
         privLbl.className   = 'priv-lbl';
-        privLbl.textContent = 'make:';
+        privLbl.textContent = TEXT.make;
 
         const privBtn = document.createElement('button');
         privBtn.className   = 'priv-btn' + (s.private ? '' : ' on');
-        privBtn.textContent = s.private ? 'public' : 'private';
+        privBtn.textContent = s.private ? TEXT.public : TEXT.private;
         privBtn.title       = s.private
-          ? 'now private — anyone with the link could run it again'
-          : 'now public — only you would be able to open it';
+          ? TEXT.nowPrivateHint
+          : TEXT.nowPublicHint;
         privBtn.addEventListener('click', e => { e.stopPropagation(); togglePrivate(s.id); });
 
         privWrap.appendChild(privLbl);
@@ -284,7 +284,7 @@ function renderScripts() {
 
         const delBtn = document.createElement('button');
         delBtn.className = 'ib sm danger';
-        delBtn.title     = 'delete script';
+        delBtn.title     = TEXT.deleteScript;
         delBtn.innerHTML = ICO.x;
         delBtn.addEventListener('click', () => confirmDel(() => deleteScript(s.id)));
         foot.appendChild(delBtn);
@@ -303,7 +303,7 @@ function renderScripts() {
   if (selGrp) {
     const addRow = document.createElement('div');
     addRow.className = 'rp-add';
-    addRow.title     = 'add script';
+    addRow.title     = TEXT.addScript;
     addRow.innerHTML = `<svg width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M6 1V11M1 6H11" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>`;
     addRow.addEventListener('click', addScript);
     list.appendChild(addRow);
@@ -377,7 +377,7 @@ async function saveScript(sid) {
     if (res && typeof res.updated_at === 'number') s.updated_at = res.updated_at;
     sortScripts(grp(selGrp));
   } catch {
-    toast('failed to save script');
+    toast(TEXT.saveFailed);
   }
   renderScripts();
   keepInView(sid);
@@ -395,7 +395,7 @@ async function deleteScript(sid) {
     await api('DELETE', `/api/scripts/${sid}`);
     g.scripts = g.scripts.filter(s => s.id !== sid);
   } catch {
-    toast('failed to delete script');
+    toast(TEXT.deleteFailed);
   }
   renderScripts();
 }
@@ -407,22 +407,22 @@ async function togglePrivate(sid) {
   try {
     await api('PUT', `/api/scripts/${sid}/private`, { private: next });
     s.private = next;
-    toast(next ? 'private — opens only while you are logged in' : 'public — anyone with the link can run it');
+    toast(next ? TEXT.madePrivate : TEXT.madePublic);
   } catch {
-    toast('failed to change visibility');
+    toast(TEXT.visibilityFailed);
   }
   renderScripts();
 }
 
 function copyContent(s) {
   navigator.clipboard?.writeText(s.content).catch(() => {});
-  toast('script copied!');
+  toast(TEXT.scriptCopied);
 }
 
 function copyWget(s) {
   const cmd = `wget -qO- ${window.location.origin}/run/${userHash}/${s.hash} | bash`;
   navigator.clipboard?.writeText(cmd).catch(() => {});
-  toast(s.private ? 'wget copied — script is private, it will not run remotely' : 'wget command copied!');
+  toast(s.private ? TEXT.wgetCopiedPrivate : TEXT.wgetCopied);
 }
 
 async function addGroup() {
@@ -432,7 +432,7 @@ async function addGroup() {
   row.className = 'new-grp-row';
   const inp = document.createElement('input');
   inp.className    = 'new-grp-inp';
-  inp.placeholder  = 'chapter name';
+  inp.placeholder  = TEXT.chapterName;
   inp.autocomplete = 'off';
   let committed = false;
   const commit = async () => {
@@ -447,7 +447,7 @@ async function addGroup() {
       renderGroups();
       selectGrp(g.id);
     } catch {
-      toast('failed to create chapter');
+      toast(TEXT.createChapterFailed);
     }
   };
   inp.addEventListener('keydown', e => {
@@ -474,7 +474,7 @@ async function addScript() {
       if (inp) inp.focus();
     });
   } catch {
-    toast('failed to create script');
+    toast(TEXT.createScriptFailed);
   }
 }
 
@@ -486,12 +486,12 @@ function enterGrpEditMode() {
   inp.className    = 'drop-inp';
   inp.id           = 'grpRenameInp';
   inp.value        = g ? g.name : '';
-  inp.placeholder  = 'new name';
+  inp.placeholder  = TEXT.newName;
   inp.autocomplete = 'off';
 
   const btn = $('grpRenameBtn');
   btn.innerHTML = ICO.check;
-  btn.title     = 'save';
+  btn.title     = TEXT.save;
   btn.onclick   = e => { e.stopPropagation(); saveGroupName(); };
 
   row.replaceChild(inp, $('grpNameDisplay'));
@@ -517,7 +517,7 @@ function exitGrpEditMode() {
 
   const btn = $('grpRenameBtn');
   btn.innerHTML = ICO.pencil;
-  btn.title     = 'edit name';
+  btn.title     = TEXT.editName;
   btn.onclick   = e => { e.stopPropagation(); enterGrpEditMode(); };
 }
 
@@ -532,7 +532,7 @@ async function saveGroupName() {
     renderGroups();
     renderHead();
   } catch {
-    toast('failed to rename chapter');
+    toast(TEXT.renameFailed);
   }
   $('grpDrop').style.display = 'none';
 }
@@ -598,7 +598,7 @@ $('delGrpRow').addEventListener('click', e => {
       if (selGrp) await loadScripts(selGrp);
       render();
     } catch {
-      toast('failed to delete chapter');
+      toast(TEXT.deleteChapterFailed);
     }
   });
 });
@@ -711,6 +711,11 @@ document.querySelectorAll('.tab[data-tab]').forEach(tab => {
   const lgrFocusReset  = document.getElementById('lgrFocusReset');
 
   // ── utils ──────────────────────────────────────────────────────────────
+  // "<shown> / <total> lines" in the region's wording (TEXT.lines: %d, %d)
+  function lines(shown, total) {
+    return TEXT.lines.replace('%d', shown).replace('%d', total);
+  }
+
   function escH(s) {
     return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
   }
@@ -755,15 +760,15 @@ document.querySelectorAll('.tab[data-tab]').forEach(tab => {
     focusOn = !focusOn;
     lgrFocusToggle.classList.toggle('active', focusOn);
     lgrFocusToggle.innerHTML = focusOn
-      ? `<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg> on`
-      : `<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94"/><path d="M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19"/><line x1="1" y1="1" x2="23" y2="23"/></svg> off`;
+      ? `<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg> ${TEXT.on}`
+      : `<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94"/><path d="M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19"/><line x1="1" y1="1" x2="23" y2="23"/></svg> ${TEXT.off}`;
     renderLogs();
   });
   lgrFocusReset.addEventListener('click', () => {
     lgrFocusCenter.value = lgrFocusBefore.value = lgrFocusAfter.value = 0;
     focusOn = true;
     lgrFocusToggle.classList.add('active');
-    lgrFocusToggle.innerHTML = `<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg> on`;
+    lgrFocusToggle.innerHTML = `<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg> ${TEXT.on}`;
     renderLogs();
   });
 
@@ -871,10 +876,10 @@ document.querySelectorAll('.tab[data-tab]').forEach(tab => {
       filtered.push(line); nums.push(orig);
     });
     if (!filtered.length && rawLines.length) {
-      lgrDisplay.innerHTML = '<div class="lgr-empty">No lines match current conditions.</div>';
-      lgrCount.textContent = `0 / ${rawLines.length} lines`; return;
+      lgrDisplay.innerHTML = `<div class="lgr-empty">${TEXT.noMatch}</div>`;
+      lgrCount.textContent = lines(0, rawLines.length); return;
     }
-    lgrCount.textContent = `${filtered.length} / ${rawLines.length} lines`;
+    lgrCount.textContent = lines(filtered.length, rawLines.length);
     const hlPats = aGrep.map(c=>c.pattern).filter(p=>p.trim());
     const allMath = mathConds.filter(c=>c.enabled);
     const mathPfx = allMath.map(c=>c.prefix&&c.prefix.trim()).filter(Boolean);
@@ -900,7 +905,7 @@ document.querySelectorAll('.tab[data-tab]').forEach(tab => {
     pill.className = `lgr-pill ${type}-pill${cond.enabled?'':' off'}`;
     const inp = document.createElement('input');
     inp.type = 'text'; inp.value = cond.pattern;
-    inp.placeholder = type==='grep' ? '*text* or ERROR' : '*200* or ERROR';
+    inp.placeholder = type==='grep' ? TEXT.grepPlaceholder : TEXT.removePlaceholder;
     inp.style.width = Math.max(80, inp.value.length*8)+'px';
     inp.addEventListener('input', () => {
       cond.pattern = inp.value;
@@ -908,13 +913,13 @@ document.querySelectorAll('.tab[data-tab]').forEach(tab => {
       renderLogs();
     });
     const tog = document.createElement('button');
-    tog.className = 'lgr-pbtn tog'; tog.title = cond.enabled?'disable':'enable';
+    tog.className = 'lgr-pbtn tog'; tog.title = cond.enabled?TEXT.disable:TEXT.enable;
     tog.innerHTML = cond.enabled
       ? `<svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>`
       : `<svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94"/><path d="M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19"/><line x1="1" y1="1" x2="23" y2="23"/></svg>`;
     tog.addEventListener('click', () => { cond.enabled=!cond.enabled; renderConds(); renderLogs(); });
     const del = document.createElement('button');
-    del.className = 'lgr-pbtn del'; del.title = 'delete';
+    del.className = 'lgr-pbtn del'; del.title = TEXT.delete;
     del.innerHTML = `<svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>`;
     del.addEventListener('click', () => {
       if (type==='grep') grepConds = grepConds.filter(c=>c.id!==cond.id);
@@ -929,7 +934,7 @@ document.querySelectorAll('.tab[data-tab]').forEach(tab => {
     const pill = document.createElement('div');
     pill.className = 'lgr-math-pill' + (cond.enabled?'':' off');
     const pfx = document.createElement('input'); pfx.type='text'; pfx.className='lgr-mpfx';
-    pfx.value=cond.prefix||''; pfx.placeholder='N'; pfx.title='optional prefix before number';
+    pfx.value=cond.prefix||''; pfx.placeholder='N'; pfx.title=TEXT.prefixHint;
     pfx.style.width=Math.max(20,(cond.prefix||'').length*8)+'px';
     pfx.addEventListener('input', () => { cond.prefix=pfx.value; pfx.style.width=Math.max(20,pfx.value.length*8)+'px'; renderLogs(); });
     const op = document.createElement('select'); op.className='lgr-mop';
@@ -938,12 +943,12 @@ document.querySelectorAll('.tab[data-tab]').forEach(tab => {
     const val = document.createElement('input'); val.type='number'; val.className='lgr-mval';
     val.value=cond.value??''; val.placeholder='0';
     val.addEventListener('input', () => { cond.value=val.value===''?null:parseFloat(val.value); renderLogs(); });
-    const tog = document.createElement('button'); tog.className='lgr-pbtn tog'; tog.title=cond.enabled?'disable':'enable';
+    const tog = document.createElement('button'); tog.className='lgr-pbtn tog'; tog.title=cond.enabled?TEXT.disable:TEXT.enable;
     tog.innerHTML = cond.enabled
       ? `<svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>`
       : `<svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94"/><path d="M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19"/><line x1="1" y1="1" x2="23" y2="23"/></svg>`;
     tog.addEventListener('click', () => { cond.enabled=!cond.enabled; renderMath(); renderLogs(); });
-    const del = document.createElement('button'); del.className='lgr-pbtn del'; del.title='delete';
+    const del = document.createElement('button'); del.className='lgr-pbtn del'; del.title=TEXT.delete;
     del.innerHTML=`<svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>`;
     del.addEventListener('click', () => { mathConds=mathConds.filter(c=>c.id!==cond.id); renderMath(); renderLogs(); });
     pill.appendChild(pfx); pill.appendChild(op); pill.appendChild(val); pill.appendChild(tog); pill.appendChild(del);
@@ -969,7 +974,7 @@ document.querySelectorAll('.tab[data-tab]').forEach(tab => {
   function getExt(n) { const m=n.match(/(\.[^.]+)$/); return m?m[1].toLowerCase():''; }
   function allowed(n) { return ALLOWED.has(getExt(n)); }
   function showErr(n) {
-    lgrDropErr.textContent = `Unsupported: ${getExt(n)||'(no ext)'}`;
+    lgrDropErr.textContent = TEXT.unsupported.replace('%s', getExt(n)||TEXT.noExt);
     lgrDropErr.classList.add('show');
     setTimeout(() => lgrDropErr.classList.remove('show'), 3000);
   }
@@ -1017,13 +1022,13 @@ document.querySelectorAll('.tab[data-tab]').forEach(tab => {
     grepConds=[]; removeConds=[]; mathConds=[];
     lgrFocusCenter.value=lgrFocusBefore.value=lgrFocusAfter.value=0;
     focusOn=true; lgrFocusToggle.classList.add('active');
-    lgrFocusToggle.innerHTML=`<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg> on`;
+    lgrFocusToggle.innerHTML=`<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg> ${TEXT.on}`;
     renderConds(); renderMath();
   }
 
   lgrLoadNewBtn.addEventListener('click', () => {
     rawLines = []; lgrLoad.style.display = ''; lgrWorkspace.style.display = 'none'; lgrActs.style.display = 'none';
-    lgrCount.textContent = '0 / 0 lines'; resetAll();
+    lgrCount.textContent = lines(0, 0); resetAll();
   });
   lgrClearBtn.addEventListener('click', () => { resetAll(); renderLogs(); });
   lgrSelectBtn.addEventListener('click', () => {

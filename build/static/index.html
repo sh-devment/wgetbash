@@ -13,20 +13,16 @@
 
 <!-- ════ LOGIN ════ -->
 <div class="login-wrap" id="loginWrap" style="display:none">
-  <div class="login-center">
+  <div class="login-card-wrap">
     <div class="login-card">
       <div class="login-logo">WGETBASH</div>
       <div class="login-sub"><a href="https://{{.Domain}}" target="_blank">{{.Domain}}</a></div>
       <button class="login-btn" id="doLogin">{{.Text.Login}}</button>
     </div>
-    <div class="login-panel open" id="loginPanel">
-      <div class="login-panel-inner">
-        <div class="login-hello">{{.Text.About}}</div>
-        <div class="login-panel-foot">
-          <span class="login-foot-dot"></span>
-        </div>
-      </div>
-    </div>
+  </div>
+  <div class="login-hello">{{.Text.About}}</div>
+  <div class="login-divider">
+    <span class="login-divider-dot"></span>
   </div>
 </div>
 
